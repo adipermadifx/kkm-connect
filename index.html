@@ -500,14 +500,14 @@
 
     // --- FIREBASE INITIALIZATION ---
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkm-connect-untag';
-    const firebaseConfig = {
-  apiKey: "AIzaSyBuNQZTWvnfW0KspyaNOgtFBvEa0BMldE0",
+    const firebaseConfigStr = JSON.stringify({
+  apiKey: "AIzaSyBuNQZTWvnfWOKspyaNOgtFBvEa0BMldE0",
   authDomain: "kkm-connect-untag.firebaseapp.com",
   projectId: "kkm-connect-untag",
   storageBucket: "kkm-connect-untag.firebasestorage.app",
   messagingSenderId: "823114125356",
   appId: "1:823114125356:web:b069a1a24669bd83ba0189"
-};
+});
     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
     if (firebaseConfigStr) {
