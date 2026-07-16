@@ -438,6 +438,8 @@
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script type="module">
     // --- 1. STATE SINKRONISASI DASAR (DILAKUKAN PERTAMA KALI SEBELUM FIREBASE) ---
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkm-connect-untag';
     let db = null;
     let auth = null;
     let isCloudActive = false;
