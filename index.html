@@ -199,7 +199,7 @@
             <textarea id="form-deskripsi" placeholder="Tuliskan jalannya kegiatan secara lengkap..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[120px] custom-scrollbar" required></textarea>
           </div>
 
-          <!-- YOUTUBE VIDEO LINK ROW (BARU) -->
+          <!-- YOUTUBE VIDEO LINK ROW -->
           <div class="flex flex-col gap-1.5">
             <label class="text-xs font-bold text-slate-600 uppercase">Link Video YouTube Dokumentasi (Opsional)</label>
             <div class="relative">
@@ -209,11 +209,21 @@
             <p class="text-[10px] text-slate-400">Aplikasi akan otomatis menampilkan pemutar video interaktif langsung di feed bagi semua orang!</p>
           </div>
 
+          <!-- UPLOAD GAMBAR DENGAN KOMPRESI OTOMATIS (SOLUSI B - BARU) -->
           <div class="flex flex-col gap-2">
             <label class="text-xs font-bold text-slate-600 uppercase">Dokumentasi Foto Kegiatan</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="flex flex-col gap-2">
-                <input type="text" id="form-image-url" placeholder="Sematkan URL Gambar (Opsional)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                <!-- Tombol Kamera / Unggah File Berkas HP -->
+                <label class="bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all shadow-sm">
+                  <i class="fa-solid fa-camera text-sm"></i>
+                  Ambil Foto / Pilih Berkas HP
+                  <input type="file" id="form-image-file" accept="image/*" class="hidden" onchange="compressAndPreviewImage(event)">
+                </label>
+                
+                <!-- Input URL Tersembunyi (juga bisa diisi manual jika ingin menempel URL langsung) -->
+                <input type="text" id="form-image-url" placeholder="Atau tempel URL Gambar langsung (Opsional)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                
                 <div class="text-center text-xs text-slate-400 font-medium">Atau gunakan ilustrator AI pintar</div>
                 <button type="button" onclick="generateIllustrationWithAI()" id="btn-ai-img" class="bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all">
                   <i class="fa-solid fa-image"></i> Generasi Ilustrasi Foto (Imagen AI)
@@ -438,12 +448,13 @@
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script type="module">
     // --- 1. STATE SINKRONISASI DASAR (DILAKUKAN PERTAMA KALI SEBELUM FIREBASE) ---
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkm-connect-untag';
     let db = null;
     let auth = null;
     let isCloudActive = false;
     let activeYear = localStorage.getItem('kkm_active_year') || '2026';
+
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkm-connect-untag';
 
     window.debugLogs = [];
     window.addDebugLog = function(msg, isError = false) {
@@ -641,22 +652,24 @@
 
     function updateIdentityUI() {
       const container = document.getElementById('identity-section');
-      if (currentProfile) {
-        container.innerHTML = `
-          <div class="flex items-center gap-2 bg-emerald-800/60 pl-3 pr-2 py-1.5 rounded-full border border-emerald-600 w-full sm:w-auto justify-between shadow-inner">
-            <div class="text-left">
-              <p class="text-[9px] text-emerald-200 font-semibold leading-none">${currentProfile.npm}</p>
-              <p class="text-xs font-bold text-white max-w-[150px] truncate leading-tight">${currentProfile.nama}</p>
+      if (container) {
+        if (currentProfile) {
+          container.innerHTML = `
+            <div class="flex items-center gap-2 bg-emerald-800/60 pl-3 pr-2 py-1.5 rounded-full border border-emerald-600 w-full sm:w-auto justify-between shadow-inner">
+              <div class="text-left">
+                <p class="text-[9px] text-emerald-200 font-semibold leading-none">${currentProfile.npm}</p>
+                <p class="text-xs font-bold text-white max-w-[150px] truncate leading-tight">${currentProfile.nama}</p>
+              </div>
+              <button onclick="clearProfile()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 py-1 px-3 rounded-full transition-colors text-white font-bold">Ganti</button>
             </div>
-            <button onclick="clearProfile()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 py-1 px-3 rounded-full transition-colors text-white font-bold">Ganti</button>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <button onclick="toggleIdentityModal(true)" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-md flex items-center justify-center gap-2 text-xs transition-all">
-            <i class="fa-solid fa-user"></i> Pilih Identitas Anda
-          </button>
-        `;
+          `;
+        } else {
+          container.innerHTML = `
+            <button onclick="toggleIdentityModal(true)" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-md flex items-center justify-center gap-2 text-xs transition-all">
+              <i class="fa-solid fa-user"></i> Pilih Identitas Anda
+            </button>
+          `;
+        }
       }
     }
 
@@ -667,6 +680,65 @@
       const match = url.match(regExp);
       return (match && match[2].length === 11) ? match[2] : null;
     }
+
+    // --- FUNGSION KOMPRESI GAMBAR CLIENT-SIDE (SOLUSI B - TERBARU) ---
+    window.compressAndPreviewImage = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      showToast("Sedang mereduksi & mengompres gambar...", "info");
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // Atur resolusi maksimum (lebar atau tinggi 800 piksel)
+          const max_size = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > max_size) {
+              height *= max_size / width;
+              width = max_size;
+            }
+          } else {
+            if (height > max_size) {
+              width *= max_size / height;
+              height = max_size;
+            }
+          }
+
+          // Render gambar ke canvas untuk resize
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          // Kompresi ke format JPEG dengan kualitas 0.6 (Sangat ringan, hemat bandwidth & Firestore)
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.6);
+          
+          // Simpan hasil kompresi ke input text URL utama
+          document.getElementById('form-image-url').value = compressedBase64;
+          
+          // Render area preview gambar di form
+          const preview = document.getElementById('image-preview-container');
+          if (preview) {
+            preview.innerHTML = `
+              <div class="relative w-full h-full">
+                <img src="${compressedBase64}" class="w-full h-24 object-cover rounded-xl shadow-inner">
+                <button type="button" onclick="clearPreviewImage()" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">&times;</button>
+              </div>
+            `;
+          }
+          
+          showToast("Foto sukses dikompres otomatis ke ukuran ultra-ringan!", "success");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
 
     window.renderFeed = function() {
       const query = document.getElementById('search-input').value.toLowerCase();
@@ -702,7 +774,6 @@
         const catInfo = CATEGORIES.find(c => c.id === report.kategori) || { label: 'Lainnya', color: 'bg-slate-100 text-slate-700' };
         const hasLiked = currentProfile && report.likedBy?.includes(currentProfile.npm);
         
-        // Deteksi apakah ada Video YouTube
         const ytId = getYouTubeId(report.videoUrl);
         let youtubeIframeHTML = '';
         if (ytId) {
@@ -734,11 +805,8 @@
               </div>
               <h3 class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-emerald-700 transition-colors">${report.judul}</h3>
               <p class="text-xs text-slate-600 leading-relaxed text-justify line-clamp-4 mt-1.5">${report.deskripsi}</p>
-              
-              <!-- Pemutar YouTube (Jika Tersedia) -->
               ${youtubeIframeHTML}
             </div>
-            
             <div class="pt-3 border-t border-slate-100 flex flex-col gap-3">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -880,12 +948,12 @@
         document.getElementById('test-step-1').className = "font-bold text-amber-500";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyBuNQZTWvnfW0KspyaNOgtFBvEa0BMldE0",
-  authDomain: "kkm-connect-untag.firebaseapp.com",
-  projectId: "kkm-connect-untag",
-  storageBucket: "kkm-connect-untag.firebasestorage.app",
-  messagingSenderId: "823114125356",
-  appId: "1:823114125356:web:b069a1a24669bd83ba0189"
+          apiKey: "AIzaSyBuNQZTWvnfWOKspyaNOgtFBvEa0BMldE0",
+          authDomain: "kkm-connect-untag.firebaseapp.com",
+          projectId: "kkm-connect-untag",
+          storageBucket: "kkm-connect-untag.firebasestorage.app",
+          messagingSenderId: "823114125356",
+          appId: "1:823114125356:web:b069a1a24669bd83ba0189"
         };
 
         const app = initializeApp(firebaseConfig);
