@@ -58,7 +58,7 @@
           </select>
         </div>
         <div id="identity-section" class="flex items-center gap-2">
-          <!-- Will be dynamically populated by JS -->
+          <!-- Will be dynamically populated instantly -->
         </div>
       </div>
     </div>
@@ -72,12 +72,12 @@
           <i class="fa-solid fa-circle-info"></i>
         </div>
         <div>
-          <h4 class="font-bold text-amber-900 text-xs sm:text-sm">Mode Luring Sementara (Sesi Aktif)</h4>
-          <p class="text-[11px] sm:text-xs text-amber-700">Aplikasi berjalan pada penyimpanan lokal. Sambungkan Firebase Config di Google Cloud untuk sinkronisasi peserta secara global.</p>
+          <h4 class="font-bold text-amber-900 text-xs sm:text-sm">Menghubungkan ke Google Cloud...</h4>
+          <p class="text-[11px] sm:text-xs text-amber-700">Sedang menyinkronkan database pengabdian KKM secara online...</p>
         </div>
       </div>
-      <button onclick="showToast('Sistem siap diintegrasikan ke Google Cloud / Firestore!', 'info')" class="text-[10px] sm:text-xs bg-amber-600 hover:bg-amber-700 text-white font-bold py-1.5 px-3 rounded-lg transition-colors whitespace-nowrap">
-        Info Integrasi
+      <button onclick="toggleDiagnosticsModal(true)" class="text-[10px] sm:text-xs bg-amber-600 hover:bg-amber-700 text-white font-bold py-1.5 px-3 rounded-lg transition-colors whitespace-nowrap">
+        <i class="fa-solid fa-wrench"></i> Diagnosa Koneksi
       </button>
     </div>
   </div>
@@ -105,37 +105,29 @@
 
     <!-- ==================== TAB 1: FEED KEGIATAN ==================== -->
     <section id="pane-feed" class="tab-pane grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Left sidebar: Filter and quick stats -->
       <div class="lg:col-span-1 flex flex-col gap-4">
         <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-sm flex flex-col gap-4">
           <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider">Cari & Saring Kegiatan</h3>
-          
-          <!-- Search input -->
           <div class="relative">
             <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-3.5 text-xs"></i>
             <input type="text" id="search-input" oninput="applyFilters()" placeholder="Cari kegiatan, nama, dusun..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600">
           </div>
-
-          <!-- Category filter list -->
           <div class="flex flex-col gap-1.5">
             <label class="text-[10px] font-bold text-slate-500 uppercase">Kategori Program Kerja</label>
             <div id="category-filter-container" class="flex flex-col gap-1">
-              <!-- Will be populated dynamically -->
+              <!-- Populated instantly -->
             </div>
           </div>
-
-          <!-- Helper Banner -->
           <div class="bg-emerald-50/70 p-4 rounded-2xl border border-emerald-100/80 text-xs text-emerald-800 leading-relaxed mt-2">
             <p class="font-bold flex items-center gap-1.5 mb-1.5 text-emerald-900">
               <i class="fa-solid fa-wand-magic-sparkles text-emerald-600"></i>
               Bantuan Cepat AI
             </p>
-            Gunakan fitur asisten teks di tab <strong>Tulis Laporan</strong> untuk merapikan draf kegiatan Anda secara instan menggunakan teknologi kecerdasan buatan Gemini.
+            Gunakan asisten teks di tab <strong>Tulis Laporan</strong> untuk merapikan draf kegiatan Anda secara instan menggunakan teknologi AI Gemini.
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Activities Stream -->
       <div class="lg:col-span-2 flex flex-col gap-4">
         <div class="flex items-center justify-between">
           <h2 class="text-sm font-extrabold uppercase tracking-wider text-slate-500" id="feed-title">
@@ -145,9 +137,8 @@
             <i class="fa-solid fa-plus"></i> Tambah Kegiatan
           </button>
         </div>
-
         <div id="feed-list" class="flex flex-col gap-5">
-          <!-- Dynamically populated report cards -->
+          <!-- Populated instantly -->
         </div>
       </div>
     </section>
@@ -164,18 +155,16 @@
         </div>
 
         <form id="report-form" onsubmit="submitReport(event)" class="flex flex-col gap-5">
-          <!-- Row: Judul -->
           <div class="flex flex-col gap-1.5">
             <label class="text-xs font-bold text-slate-600 uppercase">Judul Kegiatan <span class="text-rose-500">*</span></label>
             <input type="text" id="form-judul" placeholder="Contoh: Sosialisasi PHBS & Pembagian Vitamin di Posyandu" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
           </div>
 
-          <!-- Row: Kategori & Tanggal -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="flex flex-col gap-1.5">
               <label class="text-xs font-bold text-slate-600 uppercase">Kategori Bidang</label>
               <select id="form-kategori" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
-                <!-- Populated dynamically -->
+                <!-- Dynamically populated -->
               </select>
             </div>
             <div class="flex flex-col gap-1.5">
@@ -184,7 +173,6 @@
             </div>
           </div>
 
-          <!-- Row: Lokasi -->
           <div class="flex flex-col gap-1.5">
             <label class="text-xs font-bold text-slate-600 uppercase">Nama Dusun / Lokasi Pengabdian <span class="text-rose-500">*</span></label>
             <input type="text" id="form-lokasi" placeholder="Contoh: Dusun Cantilan RT 02 (Balai Posyandu Mawar)" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600" required>
@@ -199,22 +187,28 @@
               </span>
               <span class="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">Sangat Cepat</span>
             </div>
-            <p class="text-[11px] text-slate-600">Cukup tuliskan poin kasar / draf mentah kegiatan Anda di bawah, biarkan asisten AI merapikannya menjadi deskripsi laporan pengabdian masyarakat yang formal, akademis dan terstruktur.</p>
-            
-            <textarea id="ai-draft-input" placeholder="Tulis coretan kasar Anda di sini...&#10;Contoh: kumpul ibu-ibu pkk, bicarakan pengemasan produk umkm kripik pisang, bantu bikin stiker logo, jelaskan pemasaran di shopee" class="w-full bg-white border border-emerald-100 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 min-h-[60px] custom-scrollbar"></textarea>
-            
+            <p class="text-[11px] text-slate-600">Cukup tulis draf kasar kegiatan Anda di bawah, biarkan asisten AI merapikannya menjadi laporan resmi.</p>
+            <textarea id="ai-draft-input" placeholder="Contoh: kumpul ibu-ibu pkk, bicarakan pengemasan produk umkm kripik pisang, bantu bikin stiker logo" class="w-full bg-white border border-emerald-100 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500 min-h-[60px] custom-scrollbar"></textarea>
             <button type="button" onclick="enhanceWithGemini()" id="btn-ai-text" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all self-end flex items-center gap-1.5 shadow-sm">
               <i class="fa-solid fa-sparkles"></i> Sempurnakan Deskripsi dengan AI
             </button>
           </div>
 
-          <!-- Row: Deskripsi Utama -->
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-bold text-slate-600 uppercase">Deskripsi Laporan Akhir Kegiatan <span class="text-rose-500">*</span></label>
-            <textarea id="form-deskripsi" placeholder="Tuliskan jalannya kegiatan secara lengkap beserta hasil yang dicapai oleh tim..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[120px] custom-scrollbar" required></textarea>
+            <label class="text-xs font-bold text-slate-600 uppercase">Deskripsi Laporan Kegiatan <span class="text-rose-500">*</span></label>
+            <textarea id="form-deskripsi" placeholder="Tuliskan jalannya kegiatan secara lengkap..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 min-h-[120px] custom-scrollbar" required></textarea>
           </div>
 
-          <!-- Row: Foto / Ilustrasi -->
+          <!-- YOUTUBE VIDEO LINK ROW (BARU) -->
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-slate-600 uppercase">Link Video YouTube Dokumentasi (Opsional)</label>
+            <div class="relative">
+              <i class="fa-brands fa-youtube text-red-600 absolute left-3.5 top-3.5 text-sm"></i>
+              <input type="url" id="form-video-url" placeholder="Sematkan link video pengabdian Anda (Contoh: https://www.youtube.com/watch?v=...) atau YouTube Shorts" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600">
+            </div>
+            <p class="text-[10px] text-slate-400">Aplikasi akan otomatis menampilkan pemutar video interaktif langsung di feed bagi semua orang!</p>
+          </div>
+
           <div class="flex flex-col gap-2">
             <label class="text-xs font-bold text-slate-600 uppercase">Dokumentasi Foto Kegiatan</label>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -227,8 +221,7 @@
               </div>
               <div id="image-preview-container" class="border border-dashed border-slate-200 rounded-2xl bg-slate-50 flex items-center justify-center min-h-[110px] relative overflow-hidden p-2">
                 <div class="text-center text-slate-400 text-xs">
-                  <i class="fa-regular fa-image text-lg block mb-1"></i>
-                  Preview Foto
+                  <i class="fa-regular fa-image text-lg block mb-1"></i> Preview Foto
                 </div>
               </div>
             </div>
@@ -248,20 +241,17 @@
           <h2 class="text-base sm:text-lg font-extrabold text-slate-900">Roster & Kehadiran Mahasiswa KKM</h2>
           <p class="text-xs text-slate-500 mt-1">Gunakan panel ini untuk memonitor keaktifan postingan laporan KKM tiap peserta.</p>
         </div>
-
         <label class="bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all">
           <i class="fa-solid fa-file-csv"></i> Impor Berkas CSV Baru
           <input type="file" id="csv-file-input" accept=".csv" class="hidden">
         </label>
       </div>
 
-      <!-- Live Search & Info -->
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-3.5 text-xs"></i>
         <input type="text" id="attendance-search" oninput="renderAttendanceTable()" placeholder="Cari berdasarkan nama, NPM, fakultas atau prodi..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-600">
       </div>
 
-      <!-- Scrollable Table -->
       <div class="overflow-x-auto rounded-2xl border border-slate-100">
         <table class="w-full text-left border-collapse min-w-[600px]">
           <thead>
@@ -283,25 +273,23 @@
 
     <!-- ==================== TAB 4: ANALISIS & STATS ==================== -->
     <section id="pane-analytics" class="tab-pane hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      
-      <!-- Card 1: Total Reports -->
       <div class="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col gap-4 shadow-sm justify-between">
-        <div>
-          <span class="text-[9px] font-extrabold uppercase bg-emerald-50 text-emerald-700 py-1 px-2.5 rounded-full border border-emerald-200">
-            Kinerja KKM 2026
+        <div class="flex flex-col gap-1">
+          <span class="text-[9px] font-extrabold uppercase bg-emerald-50 text-emerald-700 py-1 px-2.5 rounded-full border border-emerald-200 self-start">
+            Kinerja KKM <span class="active-year-label">2026</span>
           </span>
-          <h3 class="text-slate-800 font-bold text-sm mt-3">Total Seluruh Kontribusi</h3>
+          <h3 class="text-slate-800 font-bold text-sm mt-2">Total Seluruh Kontribusi</h3>
         </div>
         <div class="my-1">
           <span class="text-5xl font-extrabold tracking-tight text-slate-900" id="stat-total-reports">0</span>
           <span class="text-xs font-semibold text-slate-400 ml-2">Aktivitas Terlaporkan</span>
         </div>
-        <p class="text-[11px] text-slate-500 flex items-center gap-1">
-          <i class="fa-regular fa-clock text-emerald-600"></i> Diperbarui real-time saat laporan masuk.
-        </p>
+        <button onclick="exportReportsToCSV()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-extrabold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition-all">
+          <i class="fa-solid fa-file-excel text-sm"></i>
+          Ekspor Data Laporan (Excel/Drive)
+        </button>
       </div>
 
-      <!-- Card 2: Category Breakdown -->
       <div class="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col gap-4 shadow-sm">
         <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-50 pb-2">
           <i class="fa-solid fa-layer-group text-emerald-600"></i> Distribusi Kategori Program Kerja
@@ -311,7 +299,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Faculty Roster -->
       <div class="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col gap-4 shadow-sm">
         <h3 class="font-bold text-slate-900 text-xs uppercase tracking-wider flex items-center gap-1.5 border-b border-slate-50 pb-2">
           <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Sebaran Kontribusi Fakultas
@@ -320,7 +307,6 @@
           <!-- Dynamically computed faculties list -->
         </div>
       </div>
-
     </section>
 
   </main>
@@ -341,12 +327,9 @@
           <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3 top-3 text-xs"></i>
           <input type="text" id="modal-search-input" oninput="renderModalParticipantList()" placeholder="Cari nama Anda atau NPM..." class="w-full bg-slate-100 rounded-xl pl-9 pr-4 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-1 focus:ring-emerald-600">
         </div>
-
         <div id="modal-participants-list" class="max-h-60 overflow-y-auto divide-y divide-slate-100 custom-scrollbar pr-1">
           <!-- Dynamically populated lists -->
         </div>
-
-        <!-- Missing name notice / manual input -->
         <div class="mt-4 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-slate-500">
           <span class="flex items-center gap-1">
             <i class="fa-solid fa-circle-question text-slate-400"></i>
@@ -355,6 +338,64 @@
           <button onclick="triggerManualRegisterPrompt()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 py-1.5 px-3 rounded-lg font-bold transition-all text-[11px]">
             Input Nama Manual
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIAGNOSTICS & SYSTEM STATUS MODAL -->
+  <div id="diagnostics-modal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden border border-slate-700 animate-scale-up text-white">
+      <div class="bg-slate-800 p-5 border-b border-slate-700 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-square-poll-horizontal text-emerald-400 text-lg"></i>
+          <div>
+            <h3 class="text-sm sm:text-base font-extrabold tracking-wide uppercase">Konsol Diagnosa KKM Cloud</h3>
+            <p class="text-[10px] text-slate-400">Alat bantu pelacakan error sinkronisasi server Google</p>
+          </div>
+        </div>
+        <button onclick="toggleDiagnosticsModal(false)" class="text-slate-400 hover:text-white font-bold text-xl">&times;</button>
+      </div>
+      
+      <div class="p-6 flex flex-col gap-4">
+        <!-- System info cards -->
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-[9px] text-slate-400 uppercase font-bold">Waktu Kode Aktif</p>
+            <p class="text-emerald-400 font-extrabold mt-1">16 Juli 2026 10:00 WIB</p>
+          </div>
+          <div class="bg-slate-800/80 p-3 rounded-xl border border-slate-700">
+            <p class="text-[9px] text-slate-400 uppercase font-bold">Status Cloud</p>
+            <p id="diag-cloud-status" class="text-amber-400 font-extrabold mt-1">Memeriksa...</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 flex flex-col gap-2.5">
+          <h4 class="text-xs font-bold text-slate-300 border-b border-slate-800 pb-1.5">Rincian Tes Koneksi:</h4>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">1. Konfigurasi Firebase</span>
+            <span id="test-step-1" class="font-bold text-slate-500">Memeriksa...</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">2. Anonymous Authentication</span>
+            <span id="test-step-2" class="font-bold text-slate-500">Memeriksa...</span>
+          </div>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-slate-400">3. Firestore Database Connection</span>
+            <span id="test-step-3" class="font-bold text-slate-500">Memeriksa...</span>
+          </div>
+        </div>
+
+        <!-- Terminal Logs -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Terminal Log System:</label>
+          <div id="debug-log-list" class="bg-slate-950 border border-slate-800 rounded-xl p-3 text-[10px] font-mono h-32 overflow-y-auto custom-scrollbar text-left text-slate-300">
+            <!-- Logs populated dynamically -->
+          </div>
+        </div>
+
+        <div class="text-[11px] text-slate-400 leading-relaxed bg-slate-800/40 p-3 rounded-xl border border-slate-800">
+          💡 <strong>Tips Mengatasi Luring:</strong> Jika Tes 2 atau 3 berstatus <strong>[GAGAL]</strong>, silakan buka laptop dan pastikan Anda sudah mengaktifkan <strong>Anonymous Sign-in</strong> di menu *Authentication* Firebase Console Anda.
         </div>
       </div>
     </div>
@@ -396,17 +437,36 @@
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    // --- STATE MANAGEMENT ---
+    // --- 1. STATE SINKRONISASI DASAR (DILAKUKAN PERTAMA KALI SEBELUM FIREBASE) ---
     let db = null;
     let auth = null;
     let isCloudActive = false;
     let activeYear = localStorage.getItem('kkm_active_year') || '2026';
 
-    // Roster Default (diisi dengan flag tahun untuk penyaringan)
+    window.debugLogs = [];
+    window.addDebugLog = function(msg, isError = false) {
+      console.log(msg);
+      window.debugLogs.push({ time: new Date().toLocaleTimeString(), msg, isError });
+      const logContainer = document.getElementById('debug-log-list');
+      if (logContainer) {
+        logContainer.innerHTML = window.debugLogs.map(l => `
+          <div class="py-1 border-b border-slate-800 ${l.isError ? 'text-red-400 font-semibold' : 'text-slate-300'}">
+            <span class="text-[9px] font-mono text-slate-500">[${l.time}]</span> ${l.msg}
+          </div>
+        `).join('');
+      }
+    };
+
+    window.toggleDiagnosticsModal = function(show) {
+      const modal = document.getElementById('diagnostics-modal');
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    };
+
+    // Roster Default langsung dimuat lokal
     let participants = [
       { no: 1, npm: "C63211231020", nama: "LUTHFIA MUTIAFAHIM", prodi: "Ilmu Administrasi Niaga", fakultas: "FISIP", tahun: "2026" },
       { no: 2, npm: "C63211231008", nama: "CASKINI NUR AINI", prodi: "Ilmu Administrasi Niaga", fakultas: "FISIP", tahun: "2026" },
@@ -438,7 +498,8 @@
         lokasi: 'Dusun Cantilan (Posyandu Dahlia)',
         tanggal: '2026-07-14',
         tahun: '2026',
-        deskripsi: 'Bekerja sama dengan bidan desa and kader posyandu mendistribusikan telur serta bubur kacang hijau guna mencukupi kebutuhan nutrisi balita berisiko stunting. Kegiatan berjalan dinamis diikuti 42 anak.',
+        videoUrl: 'https://www.youtube.com/watch?v=A2vJ9yWfFtw',
+        deskripsi: 'Bekerja sama dengan bidan desa dan kader posyandu mendistribusikan telur serta bubur kacang hijau guna mencukupi kebutuhan nutrisi balita berisiko stunting. Kegiatan berjalan dinamis diikuti 42 anak.',
         reporterName: 'LUTHFIA MUTIAFAHIM',
         reporterNpm: 'C63211231020',
         reporterProdi: 'Ilmu Administrasi Niaga',
@@ -449,23 +510,6 @@
           { sender: 'SUYONO', text: 'Gerakan yang sangat dibutuhkan warga desa, semangat tim!', timestamp: new Date().toISOString() }
         ],
         imageUrl: 'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600'
-      },
-      {
-        id: 'sample-2',
-        judul: 'Senam Pagi Lansia dan Penyuluhan Kebugaran',
-        kategori: 'kesehatan',
-        lokasi: 'Halaman Kantor Balai Desa',
-        tanggal: '2026-07-15',
-        tahun: '2026',
-        deskripsi: 'Mengadakan olahraga bersama lansia dilanjutkan pemeriksaan tekanan darah gratis. Warga sangat gembira berpartisipasi untuk memelihara ketahanan fisik di usia senja.',
-        reporterName: 'WILDAN NURIKHSAN',
-        reporterNpm: 'C85201231006',
-        reporterProdi: 'Pendidikan Jasmani Kesehatan & Rekreasi',
-        reporterFakultas: 'Keguruan & Ilmu Pendidikan',
-        likes: 8,
-        likedBy: [],
-        comments: [],
-        imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600'
       }
     ];
 
@@ -480,104 +524,9 @@
 
     let selectedFilterCategory = 'semua';
 
-    // --- MULTI-YEAR HANDLING ---
-    window.changeActiveYear = function(year) {
-      activeYear = year;
-      localStorage.setItem('kkm_active_year', year);
-      
-      // Update label tahun pada seluruh UI
-      document.querySelectorAll('.active-year-label').forEach(el => {
-        el.innerText = year;
-      });
-
-      // Render ulang seluruh view sesuai filter tahun baru
-      renderFeed();
-      renderAttendanceTable();
-      renderAnalytics();
-      setupFormDefaults();
-      showToast(`Menampilkan seluruh aktivitas KKM Tahun ${year}`, "info");
-    };
-
-    // --- FIREBASE INITIALIZATION ---
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'kkm-connect-untag';
-    const firebaseConfigStr = JSON.stringify({
-      apiKey: "AIzaSyBuNQZTWvnfWOKspyaNOgtFBvEa0BMldE0",
-      authDomain: "kkm-connect-untag.firebaseapp.com",
-      projectId: "kkm-connect-untag",
-      storageBucket: "kkm-connect-untag.firebasestorage.app",
-      messagingSenderId: "823114125356",
-      appId: "1:823114125356:web:b069a1a24669bd83ba0189"
-    });
-    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-    if (firebaseConfigStr) {
-      try {
-        const firebaseConfig = JSON.parse(firebaseConfigStr);
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-
-        // Amankan Autentikasi dengan Asynchronous IIFE (Bebas dari Crash Top-Level Await di HP)
-        (async () => {
-          try {
-            if (initialAuthToken) {
-              await signInWithCustomToken(auth, initialAuthToken);
-            } else {
-              await signInAnonymously(auth);
-            }
-          } catch (authErr) {
-            console.error("Autentikasi gagal:", authErr);
-          }
-        })();
-
-        onAuthStateChanged(auth, (firebaseUser) => {
-          if (firebaseUser) {
-            isCloudActive = true;
-            document.getElementById('cloud-banner').classList.add('hidden');
-            // Sync Reports Realtime
-            const reportsCol = collection(db, 'artifacts', appId, 'public', 'data', 'reports');
-            onSnapshot(reportsCol, (snapshot) => {
-              const cloudReports = [];
-              snapshot.forEach((doc) => {
-                cloudReports.push({ id: doc.id, ...doc.data() });
-              });
-              if (cloudReports.length > 0) {
-                // Sort by date or creation
-                cloudReports.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal) || b.createdAt - a.createdAt);
-                reports = cloudReports;
-                renderFeed();
-                renderAnalytics();
-                renderAttendanceTable();
-              }
-            }, (err) => {
-              console.error("Firebase fetch error: ", err);
-            });
-
-            // Sync Participants Realtime
-            const participantsCol = collection(db, 'artifacts', appId, 'public', 'data', 'participants');
-            onSnapshot(participantsCol, (snapshot) => {
-              const cloudParts = [];
-              snapshot.forEach((doc) => {
-                cloudParts.push(doc.data());
-              });
-              if (cloudParts.length > 0) {
-                cloudParts.sort((a, b) => a.no - b.no);
-                participants = cloudParts;
-                renderAttendanceTable();
-              }
-            });
-          }
-        });
-      } catch (err) {
-        console.error("Firebase setup failed:", err);
-      }
-    }
-
-    // --- INTERFACE TRANSITIONS (TABS) ---
+    // --- 2. DAFTARKAN FUNGSI GLOBAL INSTAN ---
     window.switchTab = function(tabId) {
-      // Hide all panels
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-      // Remove active states from desktop & mobile buttons
       document.querySelectorAll('.nav-tab').forEach(el => {
         el.className = "nav-tab flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap text-slate-500 hover:text-slate-800 hover:bg-slate-50";
       });
@@ -585,17 +534,14 @@
         el.className = "mobile-tab flex flex-col items-center gap-0.5 text-slate-400";
       });
 
-      // Show target panel
       const targetPane = document.getElementById(`pane-${tabId}`);
       if (targetPane) targetPane.classList.remove('hidden');
 
-      // Set active desktop tab class
       const deskTab = document.getElementById(`tab-${tabId}`);
       if (deskTab) {
         deskTab.className = "nav-tab flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs sm:text-sm transition-all whitespace-nowrap bg-emerald-50 text-emerald-700 border border-emerald-200/50";
       }
 
-      // Set active mobile tab class
       const mobTabs = document.querySelectorAll('.mobile-tab');
       const indexMap = { 'feed': 0, 'report': 1, 'attendance': 2, 'analytics': 3 };
       if (mobTabs[indexMap[tabId]]) {
@@ -603,11 +549,11 @@
       }
     };
 
-    // --- CUSTOM TOAST HELPER ---
     window.showToast = function(message, type = 'success') {
       const toast = document.getElementById('toast');
       const icon = document.getElementById('toast-icon');
       const text = document.getElementById('toast-text');
+      if (!toast) return;
 
       text.innerText = message;
       if (type === 'error') {
@@ -620,14 +566,20 @@
         toast.className = "fixed bottom-24 sm:bottom-6 right-4 left-4 sm:left-auto z-50 p-4 rounded-xl shadow-xl flex items-center gap-3 max-w-md transition-all duration-300 border bg-emerald-50 border-emerald-200 text-emerald-800";
         icon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600"></i>';
       }
-
       toast.classList.remove('hidden');
-      setTimeout(() => {
-        toast.classList.add('hidden');
-      }, 4000);
+      setTimeout(() => toast.classList.add('hidden'), 4000);
     };
 
-    // --- IDENTITY POPULATION & MODAL ---
+    window.changeActiveYear = function(year) {
+      activeYear = year;
+      localStorage.setItem('kkm_active_year', year);
+      document.querySelectorAll('.active-year-label').forEach(el => { el.innerText = year; });
+      renderFeed();
+      renderAttendanceTable();
+      renderAnalytics();
+      setupFormDefaults();
+    };
+
     window.toggleIdentityModal = function(show) {
       const modal = document.getElementById('identity-modal');
       if (show) {
@@ -643,18 +595,13 @@
       const listContainer = document.getElementById('modal-participants-list');
       listContainer.innerHTML = '';
 
-      // Tampilkan partisipan yang sesuai dengan tahun aktif
       const filtered = participants.filter(p => 
         (p.nama.toLowerCase().includes(query) || p.npm.toLowerCase().includes(query)) &&
         (!p.tahun || p.tahun === activeYear)
       );
 
       if (filtered.length === 0) {
-        listContainer.innerHTML = `
-          <div class="text-center py-6 text-slate-400 text-xs">
-            Tidak ditemukan nama cocok untuk KKM Tahun ${activeYear}.
-          </div>
-        `;
+        listContainer.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Tidak ditemukan nama cocok untuk KKM Tahun ${activeYear}.</div>`;
         return;
       }
 
@@ -690,6 +637,356 @@
       renderAttendanceTable();
     };
 
+    function updateIdentityUI() {
+      const container = document.getElementById('identity-section');
+      if (currentProfile) {
+        container.innerHTML = `
+          <div class="flex items-center gap-2 bg-emerald-800/60 pl-3 pr-2 py-1.5 rounded-full border border-emerald-600 w-full sm:w-auto justify-between shadow-inner">
+            <div class="text-left">
+              <p class="text-[9px] text-emerald-200 font-semibold leading-none">${currentProfile.npm}</p>
+              <p class="text-xs font-bold text-white max-w-[150px] truncate leading-tight">${currentProfile.nama}</p>
+            </div>
+            <button onclick="clearProfile()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 py-1 px-3 rounded-full transition-colors text-white font-bold">Ganti</button>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="toggleIdentityModal(true)" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-md flex items-center justify-center gap-2 text-xs transition-all">
+            <i class="fa-solid fa-user"></i> Pilih Identitas Anda
+          </button>
+        `;
+      }
+    }
+
+    // --- HELPER UNTUK MENDETEKSI & EKSTRAKSI ID VIDEO YOUTUBE ---
+    function getYouTubeId(url) {
+      if (!url) return null;
+      const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=|\/shorts\/)([^#\&\?]*).*/;
+      const match = url.match(regExp);
+      return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    window.renderFeed = function() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const feedList = document.getElementById('feed-list');
+      if (!feedList) return;
+      feedList.innerHTML = '';
+
+      const filtered = reports.filter(r => {
+        const matchSearch = r.judul.toLowerCase().includes(query) || 
+                            r.deskripsi.toLowerCase().includes(query) || 
+                            r.reporterName.toLowerCase().includes(query) || 
+                            r.lokasi.toLowerCase().includes(query);
+        const matchCategory = selectedFilterCategory === 'semua' || r.kategori === selectedFilterCategory;
+        const matchYear = (!r.tahun && activeYear === '2026') || r.tahun === activeYear;
+        return matchSearch && matchCategory && matchYear;
+      });
+
+      document.getElementById('feed-title').innerText = `Kegiatan Terlaporkan KKM ${activeYear} (${filtered.length})`;
+
+      if (filtered.length === 0) {
+        feedList.innerHTML = `
+          <div class="bg-white rounded-3xl border border-slate-200/80 p-12 text-center flex flex-col items-center justify-center gap-4">
+            <div class="bg-slate-100 p-4 rounded-full text-slate-400"><i class="fa-solid fa-box-open text-3xl"></i></div>
+            <div>
+              <h4 class="font-bold text-slate-800">Tidak ada laporan kegiatan</h4>
+              <p class="text-xs text-slate-500 mt-1">Belum ada kegiatan terposting untuk KKM Tahun ${activeYear}. Mulailah menulis laporan Anda!</p>
+            </div>
+          </div>`;
+        return;
+      }
+
+      filtered.forEach(report => {
+        const catInfo = CATEGORIES.find(c => c.id === report.kategori) || { label: 'Lainnya', color: 'bg-slate-100 text-slate-700' };
+        const hasLiked = currentProfile && report.likedBy?.includes(currentProfile.npm);
+        
+        // Deteksi apakah ada Video YouTube
+        const ytId = getYouTubeId(report.videoUrl);
+        let youtubeIframeHTML = '';
+        if (ytId) {
+          youtubeIframeHTML = `
+            <div class="mt-3 relative w-full h-0 pb-[56.25%] rounded-2xl overflow-hidden shadow-md border border-slate-100 bg-black">
+              <iframe class="absolute top-0 left-0 w-full h-full" 
+                      src="https://www.youtube.com/embed/${ytId}" 
+                      title="YouTube video player" 
+                      frameborder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                      allowfullscreen>
+              </iframe>
+            </div>
+          `;
+        }
+
+        const card = document.createElement('article');
+        card.className = "bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-all group";
+        card.innerHTML = `
+          <div class="md:w-1/3 h-48 md:h-auto relative bg-slate-100 shrink-0 overflow-hidden">
+            <img src="${report.imageUrl || 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=600'}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-3 left-3 text-[9px] font-extrabold uppercase tracking-wider py-1 px-2.5 rounded-full border shadow-sm ${catInfo.color}">${catInfo.label}</span>
+          </div>
+          <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+            <div>
+              <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold mb-1">
+                <span><i class="fa-regular fa-calendar"></i> ${report.tanggal}</span>
+                <span class="text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-map-pin"></i> ${report.lokasi}</span>
+              </div>
+              <h3 class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-emerald-700 transition-colors">${report.judul}</h3>
+              <p class="text-xs text-slate-600 leading-relaxed text-justify line-clamp-4 mt-1.5">${report.deskripsi}</p>
+              
+              <!-- Pemutar YouTube (Jika Tersedia) -->
+              ${youtubeIframeHTML}
+            </div>
+            
+            <div class="pt-3 border-t border-slate-100 flex flex-col gap-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-600"><i class="fa-solid fa-user-graduate text-sm"></i></div>
+                  <div class="text-left">
+                    <p class="text-xs font-bold text-slate-800 leading-tight">${report.reporterName}</p>
+                    <p class="text-[9px] text-slate-400">${report.reporterProdi} • ${report.reporterFakultas}</p>
+                  </div>
+                </div>
+                <button onclick="likeReport('${report.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${hasLiked ? 'bg-rose-50 text-rose-600 border border-rose-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">
+                  <i class="fa-solid fa-heart"></i> <span>${report.likes || 0}</span>
+                </button>
+              </div>
+              <div class="bg-slate-50/60 rounded-2xl p-2.5 flex flex-col gap-2">
+                ${report.comments && report.comments.length > 0 ? `
+                  <div class="flex flex-col gap-1 max-h-24 overflow-y-auto divide-y divide-slate-100/60 pr-1 custom-scrollbar">
+                    ${report.comments.map(c => `<div class="text-[11px] pt-1 text-left"><span class="font-bold text-slate-800">${c.sender}:</span> <span class="text-slate-600">${c.text}</span></div>`).join('')}
+                  </div>` : ''}
+                <form onsubmit="addComment(event, '${report.id}')" class="flex gap-2">
+                  <input type="text" placeholder="Berikan komentar..." required class="flex-1 bg-white border border-slate-200 text-[11px] px-3 py-1.5 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-600">
+                  <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3 py-1.5 rounded-xl">Kirim</button>
+                </form>
+              </div>
+            </div>
+          </div>`;
+        feedList.appendChild(card);
+      });
+    };
+
+    window.setCategoryFilter = function(catId) {
+      selectedFilterCategory = catId;
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+        btn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-semibold hover:bg-slate-100 transition-all flex items-center justify-between text-slate-600";
+      });
+      const activeBtn = document.getElementById(`filter-cat-${catId}`);
+      if (activeBtn) activeBtn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-between bg-emerald-600 text-white shadow-sm";
+      renderFeed();
+    };
+
+    function populateFilterCategories() {
+      const container = document.getElementById('category-filter-container');
+      if (!container) return;
+      container.innerHTML = `
+        <button onclick="setCategoryFilter('semua')" id="filter-cat-semua" class="cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-between bg-emerald-600 text-white shadow-sm">
+          <span>Semua Kategori</span> <i class="fa-solid fa-chevron-right text-[10px]"></i>
+        </button>`;
+
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.id = `filter-cat-${cat.id}`;
+        btn.onclick = () => setCategoryFilter(cat.id);
+        btn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-semibold hover:bg-slate-100 transition-all flex items-center justify-between text-slate-600";
+        btn.innerHTML = `<span>${cat.label}</span> <i class="fa-solid fa-chevron-right text-[10px] opacity-40"></i>`;
+        container.appendChild(btn);
+      });
+    }
+
+    function setupFormDefaults() {
+      const dateEl = document.getElementById('form-tanggal');
+      if (dateEl) {
+        const currentMonthDay = new Date().toISOString().substring(5, 10);
+        dateEl.value = `${activeYear}-${currentMonthDay}`;
+      }
+      const select = document.getElementById('form-kategori');
+      if (select) {
+        select.innerHTML = '';
+        CATEGORIES.forEach(cat => {
+          const opt = document.createElement('option');
+          opt.value = cat.id;
+          opt.innerText = cat.label;
+          select.appendChild(opt);
+        });
+      }
+    }
+
+    window.applyFilters = function() { renderFeed(); };
+
+    window.exportReportsToCSV = function() {
+      const activeReports = reports.filter(r => (!r.tahun && activeYear === '2026') || r.tahun === activeYear);
+      if (activeReports.length === 0) {
+        showToast(`Belum ada data laporan KKM untuk tahun ${activeYear}.`, "error");
+        return;
+      }
+
+      let csvContent = "\uFEFFNo,Tanggal Pelaksanaan,Judul Kegiatan,Kategori,Nama Dusun/Lokasi,Nama Pelapor,NPM,Fakultas,Program Studi,Link Video YouTube,Deskripsi Laporan\n";
+      activeReports.forEach((r, idx) => {
+        const catLabel = CATEGORIES.find(c => c.id === r.kategori)?.label || 'Lainnya';
+        const row = [
+          idx + 1,
+          `"${r.tanggal}"`,
+          `"${r.judul.replace(/"/g, '""')}"`,
+          `"${catLabel}"`,
+          `"${r.lokasi.replace(/"/g, '""')}"`,
+          `"${r.reporterName.replace(/"/g, '""')}"`,
+          `"${r.reporterNpm}"`,
+          `"${r.reporterFakultas}"`,
+          `"${r.reporterProdi}"`,
+          `"${r.videoUrl ? r.videoUrl : ''}"`,
+          `"${r.deskripsi.replace(/"/g, '""').replace(/\n/g, ' ')}"`
+        ].join(",");
+        csvContent += row + "\n";
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `Data_Laporan_KKM_UNTAG_${activeYear}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast("Laporan berhasil diunduh! Silakan unggah ke Google Drive Anda.", "success");
+    };
+
+    // --- 3. RENDERING UI INSTAN (Mencegah tampilan kosong) ---
+    try {
+      addDebugLog("Memulai rendering UI instan lokal...");
+      document.getElementById('kkm-year-selector').value = activeYear;
+      document.querySelectorAll('.active-year-label').forEach(el => { el.innerText = activeYear; });
+      updateIdentityUI();
+      populateFilterCategories();
+      setupFormDefaults();
+      renderFeed();
+      addDebugLog("UI Lokal sukses ditampilkan.");
+    } catch (e) {
+      addDebugLog("Gagal render UI Lokal: " + e.message, true);
+    }
+
+    // --- 4. ASYNC FIREBASE LOADER DI LATAR BELAKANG ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    (async () => {
+      try {
+        addDebugLog("Menghubungkan ke SDK Google Firebase...");
+        document.getElementById('test-step-1').innerText = "MEMUAT...";
+        document.getElementById('test-step-1').className = "font-bold text-amber-500";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBuNQZTWvnfWOKspyaNOgtFBvEa0BMldE0",
+          authDomain: "kkm-connect-untag.firebaseapp.com",
+          projectId: "kkm-connect-untag",
+          storageBucket: "kkm-connect-untag.firebasestorage.app",
+          messagingSenderId: "823114125356",
+          appId: "1:823114125356:web:b069a1a24669bd83ba0189"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getFirestore(app);
+
+        addDebugLog("Inisialisasi Firebase App sukses.");
+        document.getElementById('test-step-1').innerText = "[BERHASIL]";
+        document.getElementById('test-step-1').className = "font-bold text-emerald-400";
+
+        document.getElementById('test-step-2').innerText = "MENGHUBUNGKAN...";
+        document.getElementById('test-step-2').className = "font-bold text-amber-500";
+
+        addDebugLog("Mencoba proses masuk Anonymous Authentication...");
+        if (initialAuthToken) {
+          await signInWithCustomToken(auth, initialAuthToken);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        onAuthStateChanged(auth, (firebaseUser) => {
+          if (firebaseUser) {
+            isCloudActive = true;
+            addDebugLog("Otentikasi Anonim Google BERHASIL.");
+            document.getElementById('test-step-2').innerText = "[BERHASIL]";
+            document.getElementById('test-step-2').className = "font-bold text-emerald-400";
+
+            document.getElementById('test-step-3').innerText = "MENYINKRONKAN...";
+            document.getElementById('test-step-3').className = "font-bold text-amber-500";
+
+            // Perbarui Banner Cloud Status di halaman utama
+            const banner = document.getElementById('cloud-banner');
+            if (banner) {
+              banner.className = "bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm";
+              banner.innerHTML = `
+                <div class="flex items-center gap-3">
+                  <div class="bg-emerald-100 p-2 rounded-xl text-emerald-800"><i class="fa-solid fa-cloud-bolt animate-pulse"></i></div>
+                  <div>
+                    <h4 class="font-bold text-emerald-900 text-xs sm:text-sm">Database Cloud Terkoneksi Real-time</h4>
+                    <p class="text-[11px] sm:text-xs text-emerald-700">Tersambung resmi ke Universitas 17 Agustus 1945 Cirebon.</p>
+                  </div>
+                </div>
+                <button onclick="toggleDiagnosticsModal(true)" class="text-[10px] sm:text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-lg transition-colors whitespace-nowrap">
+                  <i class="fa-solid fa-square-poll-horizontal"></i> Konsol Sistem
+                </button>`;
+            }
+
+            const diagStatus = document.getElementById('diag-cloud-status');
+            if (diagStatus) {
+              diagStatus.innerText = "ONLINE";
+              diagStatus.className = "text-emerald-400 font-extrabold mt-1";
+            }
+
+            // Sync Reports Real-time
+            addDebugLog("Mulai menyinkronkan data koleksi KKM dari Firestore...");
+            const reportsCol = collection(db, 'artifacts', appId, 'public', 'data', 'reports');
+            onSnapshot(reportsCol, (snapshot) => {
+              const cloudReports = [];
+              snapshot.forEach((doc) => {
+                cloudReports.push({ id: doc.id, ...doc.data() });
+              });
+              addDebugLog(`Menerima update database: ${cloudReports.length} laporan diunduh.`);
+              document.getElementById('test-step-3').innerText = "[TERKONEKSI]";
+              document.getElementById('test-step-3').className = "font-bold text-emerald-400";
+
+              if (cloudReports.length > 0) {
+                cloudReports.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal) || b.createdAt - a.createdAt);
+                reports = cloudReports;
+                renderFeed();
+                renderAnalytics();
+                renderAttendanceTable();
+              }
+            }, (error) => {
+              addDebugLog("Gagal memuat koleksi reports: " + error.message, true);
+              document.getElementById('test-step-3').innerText = "[ERROR DIBLOKIR]";
+              document.getElementById('test-step-3').className = "font-bold text-red-500";
+            });
+
+            // Sync Roster Peserta Real-time
+            const participantsCol = collection(db, 'artifacts', appId, 'public', 'data', 'participants');
+            onSnapshot(participantsCol, (snapshot) => {
+              const cloudParts = [];
+              snapshot.forEach((doc) => {
+                cloudParts.push(doc.data());
+              });
+              if (cloudParts.length > 0) {
+                cloudParts.sort((a, b) => a.no - b.no);
+                participants = cloudParts;
+                renderAttendanceTable();
+              }
+            });
+          }
+        });
+      } catch (err) {
+        addDebugLog("Error Inisialisasi Firebase: " + err.message, true);
+        document.getElementById('test-step-2').innerText = "[GAGAL]";
+        document.getElementById('test-step-2').className = "font-bold text-red-500";
+        document.getElementById('test-step-3').innerText = "[TERHAMBAT]";
+        document.getElementById('test-step-3').className = "font-bold text-red-400";
+      }
+    })();
+
+    // --- 5. FUNGSI LOGIKA TAMBAHAN (LIKE, KOMENTAR, ANALISIS) ---
     window.triggerManualRegisterPrompt = function() {
       const nama = prompt("Masukkan Nama Lengkap Anda:");
       if (!nama) return;
@@ -707,371 +1004,15 @@
       };
 
       participants.push(newP);
-      
-      // Save online if connected
       if (isCloudActive && db) {
-        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'participants', newP.npm);
+        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'participants', `${newP.npm}_${activeYear}`);
         setDoc(docRef, newP);
       }
-
       selectProfile(newP);
     };
 
-    function updateIdentityUI() {
-      const container = document.getElementById('identity-section');
-      if (currentProfile) {
-        container.innerHTML = `
-          <div class="flex items-center gap-2 bg-emerald-800/60 pl-3 pr-2 py-1.5 rounded-full border border-emerald-600 w-full sm:w-auto justify-between shadow-inner">
-            <div class="text-left">
-              <p class="text-[9px] text-emerald-200 font-semibold leading-none">${currentProfile.npm}</p>
-              <p class="text-xs font-bold text-white max-w-[150px] truncate leading-tight">${currentProfile.nama}</p>
-            </div>
-            <button onclick="clearProfile()" class="text-[10px] bg-emerald-600 hover:bg-emerald-500 py-1 px-3 rounded-full transition-colors text-white font-bold">
-              Ganti
-            </button>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <button onclick="toggleIdentityModal(true)" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-2 rounded-full shadow-md flex items-center justify-center gap-2 text-xs transition-all">
-            <i class="fa-solid fa-user"></i>
-            Pilih Identitas Anda
-          </button>
-        `;
-      }
-    }
-
-    // --- FEED RENDERER ---
-    window.renderFeed = function() {
-      const query = document.getElementById('search-input').value.toLowerCase();
-      const feedList = document.getElementById('feed-list');
-      feedList.innerHTML = '';
-
-      const filtered = reports.filter(r => {
-        const matchSearch = r.judul.toLowerCase().includes(query) || 
-                            r.deskripsi.toLowerCase().includes(query) || 
-                            r.reporterName.toLowerCase().includes(query) || 
-                            r.lokasi.toLowerCase().includes(query);
-        const matchCategory = selectedFilterCategory === 'semua' || r.kategori === selectedFilterCategory;
-        // Filter wajib: Sesuai dengan tahun aktif
-        const matchYear = (!r.tahun && activeYear === '2026') || r.tahun === activeYear;
-        return matchSearch && matchCategory && matchYear;
-      });
-
-      document.getElementById('feed-title').innerText = `Kegiatan Terlaporkan KKM ${activeYear} (${filtered.length})`;
-
-      if (filtered.length === 0) {
-        feedList.innerHTML = `
-          <div class="bg-white rounded-3xl border border-slate-200/80 p-12 text-center flex flex-col items-center justify-center gap-4">
-            <div class="bg-slate-100 p-4 rounded-full text-slate-400">
-              <i class="fa-solid fa-box-open text-3xl"></i>
-            </div>
-            <div>
-              <h4 class="font-bold text-slate-800">Tidak ada laporan kegiatan</h4>
-              <p class="text-xs text-slate-500 mt-1">Belum ada kegiatan terposting untuk KKM Tahun ${activeYear}. Mulailah menulis laporan Anda!</p>
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      filtered.forEach(report => {
-        const catInfo = CATEGORIES.find(c => c.id === report.kategori) || { label: 'Lainnya', color: 'bg-slate-100 text-slate-700' };
-        const hasLiked = currentProfile && report.likedBy?.includes(currentProfile.npm);
-
-        const card = document.createElement('article');
-        card.className = "bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col md:flex-row hover:shadow-md transition-all group";
-        card.innerHTML = `
-          <!-- Image Section -->
-          <div class="md:w-1/3 h-48 md:h-auto relative bg-slate-100 shrink-0 overflow-hidden">
-            <img src="${report.imageUrl || 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=600'}" alt="${report.judul}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            <span class="absolute top-3 left-3 text-[9px] font-extrabold uppercase tracking-wider py-1 px-2.5 rounded-full border shadow-sm ${catInfo.color}">
-              ${catInfo.label}
-            </span>
-          </div>
-
-          <!-- Body Section -->
-          <div class="p-5 flex-1 flex flex-col justify-between gap-4">
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center justify-between text-[10px] text-slate-400 font-semibold">
-                <span class="flex items-center gap-1">
-                  <i class="fa-regular fa-calendar"></i> ${report.tanggal}
-                </span>
-                <span class="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">
-                  <i class="fa-solid fa-map-pin"></i> ${report.lokasi}
-                </span>
-              </div>
-
-              <h3 class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-emerald-700 transition-colors">
-                ${report.judul}
-              </h3>
-
-              <p class="text-xs text-slate-600 leading-relaxed text-justify line-clamp-4">
-                ${report.deskripsi}
-              </p>
-            </div>
-
-            <!-- Author & Support row -->
-            <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <div class="bg-slate-100 w-8 h-8 rounded-full flex items-center justify-center text-slate-600">
-                    <i class="fa-solid fa-user-graduate text-sm"></i>
-                  </div>
-                  <div class="text-left">
-                    <p class="text-xs font-bold text-slate-800 leading-tight">${report.reporterName}</p>
-                    <p class="text-[9px] text-slate-400">${report.reporterProdi} • ${report.reporterFakultas}</p>
-                  </div>
-                </div>
-
-                <button onclick="likeReport('${report.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
-                  hasLiked 
-                    ? 'bg-rose-50 text-rose-600 border border-rose-200' 
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }">
-                  <i class="fa-solid fa-heart ${hasLiked ? 'text-rose-600' : ''}"></i>
-                  <span>${report.likes || 0}</span>
-                </button>
-              </div>
-
-              <!-- Comments Component -->
-              <div class="bg-slate-50/60 rounded-2xl p-3 flex flex-col gap-2.5">
-                ${report.comments && report.comments.length > 0 ? `
-                  <div class="flex flex-col gap-1.5 max-h-24 overflow-y-auto divide-y divide-slate-100/60 pr-1 custom-scrollbar">
-                    ${report.comments.map(c => `
-                      <div class="text-[11px] pt-1.5 first:pt-0 text-left">
-                        <span class="font-bold text-slate-800">${c.sender}:</span>
-                        <span class="text-slate-600">${c.text}</span>
-                      </div>
-                    `).join('')}
-                  </div>
-                ` : ''}
-
-                <form onsubmit="addComment(event, '${report.id}')" class="flex gap-2">
-                  <input type="text" placeholder="Berikan komentar atau masukan..." required class="flex-1 bg-white border border-slate-200 text-[11px] px-3 py-1.5 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-600">
-                  <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-xl transition-all">
-                    Kirim
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        `;
-        feedList.appendChild(card);
-      });
-    };
-
-    window.applyFilters = function() {
-      renderFeed();
-    };
-
-    window.setCategoryFilter = function(catId) {
-      selectedFilterCategory = catId;
-      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
-        btn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-semibold hover:bg-slate-100 transition-all flex items-center justify-between text-slate-600";
-      });
-      const activeBtn = document.getElementById(`filter-cat-${catId}`);
-      if (activeBtn) {
-        activeBtn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-between bg-emerald-600 text-white shadow-sm";
-      }
-      renderFeed();
-    };
-
-    function populateFilterCategories() {
-      const container = document.getElementById('category-filter-container');
-      container.innerHTML = `
-        <button onclick="setCategoryFilter('semua')" id="filter-cat-semua" class="cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-between bg-emerald-600 text-white shadow-sm">
-          <span>Semua Kategori</span>
-          <i class="fa-solid fa-chevron-right text-[10px]"></i>
-        </button>
-      `;
-
-      CATEGORIES.forEach(cat => {
-        const btn = document.createElement('button');
-        btn.id = `filter-cat-${cat.id}`;
-        btn.onclick = () => setCategoryFilter(cat.id);
-        btn.className = "cat-filter-btn text-left py-1.5 px-2.5 rounded-lg text-xs font-semibold hover:bg-slate-100 transition-all flex items-center justify-between text-slate-600";
-        btn.innerHTML = `
-          <span>${cat.label}</span>
-          <i class="fa-solid fa-chevron-right text-[10px] opacity-40"></i>
-        `;
-        container.appendChild(btn);
-      });
-    }
-
-    // --- FORM SETUP ---
-    function setupFormDefaults() {
-      // Inisialisasi default tanggal dengan tahun aktif KKM terpilih
-      const currentMonthDay = new Date().toISOString().substring(5, 10);
-      document.getElementById('form-tanggal').value = `${activeYear}-${currentMonthDay}`;
-      
-      const select = document.getElementById('form-kategori');
-      select.innerHTML = '';
-      CATEGORIES.forEach(cat => {
-        const opt = document.createElement('option');
-        opt.value = cat.id;
-        opt.innerText = cat.label;
-        select.appendChild(opt);
-      });
-    }
-
-    // --- GEMINI TEXT GENERATION ---
-    window.enhanceWithGemini = async function() {
-      const draft = document.getElementById('ai-draft-input').value.trim();
-      const judul = document.getElementById('form-judul').value.trim();
-      const lokasi = document.getElementById('form-lokasi').value.trim();
-      const btn = document.getElementById('btn-ai-text');
-
-      if (!draft) {
-        showToast("Tuliskan draf kasar kegiatan Anda terlebih dahulu!", "error");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Menyusun Laporan...';
-
-      const apiKey = ""; // Runtime-supplied empty fallback
-      const systemPrompt = "Anda adalah asisten penulisan laporan Kuliah Kerja Mahasiswa (KKM) Universitas di Indonesia. Tugas Anda adalah mengubah draf kasar mahasiswa menjadi tulisan laporan akhir yang formal, mengalir, penuh pengabdian sosial, akademis dan rapi (minimal 3-5 kalimat). Jangan sertakan markdown, langsung hasilkan satu paragraf bersih.";
-      const query = `Draf: "${draft}"\nJudul: "${judul}"\nLokasi: ${lokasi}`;
-
-      let retries = 5;
-      let delay = 1000;
-      let success = false;
-      let text = "";
-
-      while (retries > 0 && !success) {
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{ parts: [{ text: query }] }],
-              systemInstruction: { parts: [{ text: systemPrompt }] }
-            })
-          });
-
-          if (!res.ok) throw new Error("HTTP error " + res.status);
-          const data = await res.json();
-          text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-          success = true;
-        } catch (err) {
-          retries--;
-          if (retries === 0) {
-            showToast("Gagal terhubung dengan asisten kecerdasan buatan.", "error");
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Sempurnakan Deskripsi dengan AI';
-            return;
-          }
-          await new Promise(r => setTimeout(r, delay));
-          delay *= 2;
-        }
-      }
-
-      if (success && text) {
-        document.getElementById('form-deskripsi').value = text.trim();
-        showToast("Deskripsi berhasil dipercantik oleh AI!", "success");
-      }
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Sempurnakan Deskripsi dengan AI';
-    };
-
-    // --- IMAGEN IMAGE GENERATION ---
-    window.generateIllustrationWithAI = async function() {
-      const judul = document.getElementById('form-judul').value.trim();
-      const btn = document.getElementById('btn-ai-img');
-
-      if (!judul) {
-        showToast("Isi Judul Kegiatan terlebih dahulu agar AI mengetahui tema gambar!", "error");
-        return;
-      }
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Melukis...';
-
-      const apiKey = "";
-      const prompt = `documentary photo of Indonesian students doing KKN community development: ${judul}, daylight, natural, high quality, realistic`;
-
-      let retries = 5;
-      let delay = 1000;
-      let success = false;
-      let base64 = "";
-
-      // Utilizing fallback model for Canvas: gemini-2.5-flash-image-preview
-      while (retries > 0 && !success) {
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              instances: [{ prompt: prompt }],
-              parameters: { sampleCount: 1 }
-            })
-          });
-
-          if (!res.ok) throw new Error("HTTP error " + res.status);
-          const data = await res.json();
-          base64 = data.predictions?.[0]?.bytesBase64Encoded;
-          success = true;
-        } catch (err) {
-          retries--;
-          if (retries === 0) {
-            // Note in console or message of the required fallback
-            showToast("Menggunakan fallback model ilustrator...", "info");
-            // Call second option if primary fails
-            try {
-              const fallbackRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  contents: [{ parts: [{ text: prompt }] }],
-                  generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
-                })
-              });
-              const fallbackData = await fallbackRes.json();
-              base64 = fallbackData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
-              if (base64) success = true;
-            } catch (fallbackErr) {
-              showToast("Gagal menggambar ilustrasi. Periksa koneksi internet.", "error");
-              btn.disabled = false;
-              btn.innerHTML = '<i class="fa-solid fa-image"></i> Generasi Ilustrasi Foto (Imagen AI)';
-              return;
-            }
-          }
-          await new Promise(r => setTimeout(r, delay));
-          delay *= 2;
-        }
-      }
-
-      if (success && base64) {
-        const url = `data:image/png;base64,${base64}`;
-        document.getElementById('form-image-url').value = url;
-        const preview = document.getElementById('image-preview-container');
-        preview.innerHTML = `
-          <div class="relative w-full h-full">
-            <img src="${url}" class="w-full h-24 object-cover rounded-xl shadow-inner">
-            <button type="button" onclick="clearPreviewImage()" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">&times;</button>
-          </div>
-        `;
-        showToast("Ilustrasi foto berhasil digenerasi!", "success");
-      }
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fa-solid fa-image"></i> Generasi Ilustrasi Foto (Imagen AI)';
-    };
-
-    window.clearPreviewImage = function() {
-      document.getElementById('form-image-url').value = '';
-      document.getElementById('image-preview-container').innerHTML = `
-        <div class="text-center text-slate-400 text-xs">
-          <i class="fa-regular fa-image text-lg block mb-1"></i>
-          Preview Foto
-        </div>
-      `;
-    };
-
-    // --- SUBMIT REPORT CODES ---
     window.submitReport = async function(e) {
       e.preventDefault();
-
       if (!currentProfile) {
         showToast("Pilih Identitas Anda terlebih dahulu di pojok kanan atas!", "error");
         toggleIdentityModal(true);
@@ -1083,22 +1024,17 @@
       const lokasi = document.getElementById('form-lokasi').value.trim();
       const tanggal = document.getElementById('form-tanggal').value;
       const deskripsi = document.getElementById('form-deskripsi').value.trim();
+      const videoUrl = document.getElementById('form-video-url').value.trim();
       const imageUrlInput = document.getElementById('form-image-url').value.trim();
 
       const newReport = {
-        judul,
-        kategori,
-        lokasi,
-        tanggal,
-        deskripsi,
-        tahun: activeYear, // Flag tahun disimpan dinamis
+        judul, kategori, lokasi, tanggal, deskripsi, videoUrl,
+        tahun: activeYear,
         reporterName: currentProfile.nama,
         reporterNpm: currentProfile.npm,
         reporterProdi: currentProfile.prodi,
         reporterFakultas: currentProfile.fakultas,
-        likes: 0,
-        likedBy: [],
-        comments: [],
+        likes: 0, likedBy: [], comments: [],
         imageUrl: imageUrlInput || 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&q=80&w=600',
         createdAt: Date.now()
       };
@@ -1107,8 +1043,8 @@
         if (isCloudActive && db) {
           const reportsCol = collection(db, 'artifacts', appId, 'public', 'data', 'reports');
           await addDoc(reportsCol, newReport);
+          addDebugLog(`Mengirimkan laporan baru ke cloud: "${judul}"`);
         } else {
-          // Local fallback saving
           reports.unshift({ id: 'loc-' + Date.now(), ...newReport });
           localStorage.setItem('kkm_reports', JSON.stringify(reports));
           renderFeed();
@@ -1117,12 +1053,10 @@
         }
 
         showToast(`Kegiatan berhasil dilaporkan untuk KKM Tahun ${activeYear}!`, "success");
-        // Reset form
         document.getElementById('report-form').reset();
         document.getElementById('ai-draft-input').value = '';
         clearPreviewImage();
         setupFormDefaults();
-
         switchTab('feed');
       } catch (err) {
         console.error(err);
@@ -1130,14 +1064,12 @@
       }
     };
 
-    // --- LIKE ACTION ---
     window.likeReport = async function(reportId) {
       if (!currentProfile) {
         showToast("Pilih identitas Anda terlebih dahulu!", "error");
         toggleIdentityModal(true);
         return;
       }
-
       const report = reports.find(r => r.id === reportId);
       if (!report) return;
 
@@ -1168,7 +1100,6 @@
       }
     };
 
-    // --- COMMENT ACTION ---
     window.addComment = async function(e, reportId) {
       e.preventDefault();
       const input = e.target.querySelector('input');
@@ -1184,12 +1115,7 @@
       const report = reports.find(r => r.id === reportId);
       if (!report) return;
 
-      const newComment = {
-        sender: currentProfile.nama,
-        text,
-        timestamp: new Date().toISOString()
-      };
-
+      const newComment = { sender: currentProfile.nama, text, timestamp: new Date().toISOString() };
       const comments = report.comments || [];
       comments.push(newComment);
 
@@ -1233,13 +1159,12 @@
                 nama: cols[2]?.replace(/"/g, '').toUpperCase().trim() || '',
                 prodi: cols[3]?.replace(/"/g, '').trim() || '',
                 fakultas: cols[4]?.replace(/"/g, '').trim() || '',
-                tahun: activeYear // Setiap peserta baru otomatis dikunci ke tahun aktif
+                tahun: activeYear
               });
             }
           }
 
           if (parsed.length > 0) {
-            // Hapus daftar peserta lama di tahun yang sama agar tidak duplikat, lalu gabungkan
             participants = participants.filter(p => p.tahun !== activeYear).concat(parsed);
             renderAttendanceTable();
             showToast(`Berhasil mengimpor ${parsed.length} peserta untuk KKM UNTAG Cirebon Tahun ${activeYear}!`, 'success');
@@ -1262,13 +1187,12 @@
       reader.readAsText(file);
     });
 
-    // --- RENDER ATTENDANCE LIST ---
     window.renderAttendanceTable = function() {
       const query = document.getElementById('attendance-search').value.toLowerCase();
       const tbody = document.getElementById('attendance-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      // Filter berdasarkan teks pencarian DAN tahun aktif
       const filtered = participants.filter(p => 
         (p.nama.toLowerCase().includes(query) || 
          p.npm.toLowerCase().includes(query) || 
@@ -1277,7 +1201,6 @@
         (!p.tahun || p.tahun === activeYear)
       );
 
-      // Map kontribusi post khusus tahun ini
       const reportCounts = {};
       reports.forEach(r => {
         if (r.reporterNpm && ((!r.tahun && activeYear === '2026') || r.tahun === activeYear)) {
@@ -1289,10 +1212,9 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="6" class="py-8 text-center text-slate-400 text-xs italic">
-              Belum ada roster peserta untuk KKM Tahun ${activeYear}. Silakan unggah file "Daftar Hadir Peserta KKM 2026.xlsx" dalam format .csv untuk mengisi database.
+              Belum ada roster peserta untuk KKM Tahun ${activeYear}. Silakan unggah file "Daftar Hadir Peserta KKM" dalam format .csv untuk mengisi database.
             </td>
-          </tr>
-        `;
+          </tr>`;
         return;
       }
 
@@ -1312,19 +1234,14 @@
             ${count > 0 ? `
               <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 font-bold text-xs py-1 px-3 rounded-full border border-emerald-100">
                 <i class="fa-solid fa-circle-check"></i> ${count} Post
-              </span>
-            ` : `
-              <span class="text-slate-400 text-xs italic">Belum melapor</span>
-            `}
-          </td>
-        `;
+              </span>` : `
+              <span class="text-slate-400 text-xs italic">Belum melapor</span>`}
+          </td>`;
         tbody.appendChild(tr);
       });
     };
 
-    // --- COMPUTE & RENDER ANALYTICS ---
     window.renderAnalytics = function() {
-      // Hanya hitung laporan tahun aktif
       const activeReports = reports.filter(r => (!r.tahun && activeYear === '2026') || r.tahun === activeYear);
       document.getElementById('stat-total-reports').innerText = activeReports.length;
 
@@ -1338,63 +1255,197 @@
         }
       });
 
-      // Categories
       const catContainer = document.getElementById('stat-categories');
-      catContainer.innerHTML = '';
-      CATEGORIES.forEach(cat => {
-        const count = categoryCounts[cat.id] || 0;
-        const percent = activeReports.length > 0 ? (count / activeReports.length) * 100 : 0;
-
-        const el = document.createElement('div');
-        el.className = "flex flex-col gap-1";
-        el.innerHTML = `
-          <div class="flex justify-between items-center text-xs font-semibold">
-            <span class="text-slate-700">${cat.label}</span>
-            <span class="text-slate-900 font-bold">${count} Laporan (${percent.toFixed(0)}%)</span>
-          </div>
-          <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-            <div class="bg-emerald-600 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-          </div>
-        `;
-        catContainer.appendChild(el);
-      });
-
-      // Faculties
-      const facContainer = document.getElementById('stat-faculties');
-      facContainer.innerHTML = '';
-      const facEntries = Object.entries(facultyCounts);
-
-      if (facEntries.length === 0) {
-        facContainer.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Belum ada data fakultas terekam untuk KKM ${activeYear}.</p>`;
-      } else {
-        facEntries.forEach(([faculty, count]) => {
+      if (catContainer) {
+        catContainer.innerHTML = '';
+        CATEGORIES.forEach(cat => {
+          const count = categoryCounts[cat.id] || 0;
           const percent = activeReports.length > 0 ? (count / activeReports.length) * 100 : 0;
           const el = document.createElement('div');
           el.className = "flex flex-col gap-1";
           el.innerHTML = `
             <div class="flex justify-between items-center text-xs font-semibold">
-              <span class="text-slate-700 truncate max-w-[200px]">${faculty}</span>
-              <span class="text-slate-950 font-bold">${count} Post</span>
+              <span class="text-slate-700">${cat.label}</span>
+              <span class="text-slate-900 font-bold">${count} Laporan (${percent.toFixed(0)}%)</span>
             </div>
             <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full rounded-full transition-all duration-500" style="width: ${percent}%"></div>
-            </div>
-          `;
-          facContainer.appendChild(el);
+              <div class="bg-emerald-600 h-full rounded-full transition-all" style="width: ${percent}%"></div>
+            </div>`;
+          catContainer.appendChild(el);
         });
+      }
+
+      const facContainer = document.getElementById('stat-faculties');
+      if (facContainer) {
+        facContainer.innerHTML = '';
+        const facEntries = Object.entries(facultyCounts);
+        if (facEntries.length === 0) {
+          facContainer.innerHTML = `<p class="text-slate-400 text-xs text-center py-6">Belum ada data fakultas terekam untuk KKM ${activeYear}.</p>`;
+        } else {
+          facEntries.forEach(([faculty, count]) => {
+            const percent = activeReports.length > 0 ? (count / activeReports.length) * 100 : 0;
+            const el = document.createElement('div');
+            el.className = "flex flex-col gap-1";
+            el.innerHTML = `
+              <div class="flex justify-between items-center text-xs font-semibold">
+                <span class="text-slate-700 truncate max-w-[200px]">${faculty}</span>
+                <span class="text-slate-950 font-bold">${count} Post</span>
+              </div>
+              <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                <div class="bg-amber-500 h-full rounded-full transition-all" style="width: ${percent}%"></div>
+              </div>`;
+            facContainer.appendChild(el);
+          });
+        }
       }
     };
 
-    // --- WINDOW LOAD INITIALIZER ---
-    window.onload = function() {
-      // Ambil tahun yang disimpan terakhir atau default ke 2026
-      document.getElementById('kkm-year-selector').value = activeYear;
-      changeActiveYear(activeYear);
-      
-      updateIdentityUI();
-      populateFilterCategories();
-      setupFormDefaults();
+    window.enhanceWithGemini = async function() {
+      const draft = document.getElementById('ai-draft-input').value.trim();
+      const judul = document.getElementById('form-judul').value.trim();
+      const lokasi = document.getElementById('form-lokasi').value.trim();
+      const btn = document.getElementById('btn-ai-text');
+
+      if (!draft) {
+        showToast("Tuliskan draf kasar kegiatan Anda terlebih dahulu!", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Menyusun Laporan...';
+
+      const apiKey = "";
+      const systemPrompt = "Anda adalah asisten penulisan laporan KKM Universitas di Indonesia. Tugas Anda adalah mengubah draf kasar mahasiswa menjadi laporan pengabdian masyarakat formal, mengalir, penuh pengabdian sosial, akademis dan rapi (minimal 3-5 kalimat). Jangan gunakan format markdown, langsung hasilkan satu paragraf bersih.";
+      const query = `Draf: "${draft}"\nJudul: "${judul}"\nLokasi: ${lokasi}`;
+
+      let retries = 5;
+      let delay = 1000;
+      let success = false;
+      let text = "";
+
+      while (retries > 0 && !success) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: query }] }],
+              systemInstruction: { parts: [{ text: systemPrompt }] }
+            })
+          });
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          const data = await res.json();
+          text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+          success = true;
+        } catch (err) {
+          retries--;
+          if (retries === 0) {
+            showToast("Gagal terhubung dengan asisten kecerdasan buatan.", "error");
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Sempurnakan Deskripsi dengan AI';
+            return;
+          }
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+
+      if (success && text) {
+        document.getElementById('form-deskripsi').value = text.trim();
+        showToast("Deskripsi berhasil dipercantik oleh AI!", "success");
+      }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-sparkles"></i> Sempurnakan Deskripsi dengan AI';
     };
+
+    window.generateIllustrationWithAI = async function() {
+      const judul = document.getElementById('form-judul').value.trim();
+      const btn = document.getElementById('btn-ai-img');
+
+      if (!judul) {
+        showToast("Isi Judul Kegiatan terlebih dahulu agar AI tahu tema gambar!", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch animate-spin"></i> Melukis...';
+
+      const apiKey = "";
+      const prompt = `documentary photo of Indonesian students doing KKN community development: ${judul}, daylight, natural, high quality, realistic`;
+
+      let retries = 5;
+      let delay = 1000;
+      let success = false;
+      let base64 = "";
+
+      while (retries > 0 && !success) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              instances: [{ prompt: prompt }],
+              parameters: { sampleCount: 1 }
+            })
+          });
+          if (!res.ok) throw new Error("HTTP error " + res.status);
+          const data = await res.json();
+          base64 = data.predictions?.[0]?.bytesBase64Encoded;
+          success = true;
+        } catch (err) {
+          retries--;
+          if (retries === 0) {
+            showToast("Menggunakan fallback model ilustrator...", "info");
+            try {
+              const fallbackRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  contents: [{ parts: [{ text: prompt }] }],
+                  generationConfig: { responseModalities: ['TEXT', 'IMAGE'] }
+                })
+              });
+              const fallbackData = await fallbackRes.json();
+              base64 = fallbackData.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData?.data;
+              if (base64) success = true;
+            } catch (fallbackErr) {
+              showToast("Gagal menggambar ilustrasi. Periksa internet Anda.", "error");
+              btn.disabled = false;
+              btn.innerHTML = '<i class="fa-solid fa-image"></i> Generasi Ilustrasi Foto (Imagen AI)';
+              return;
+            }
+          }
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+
+      if (success && base64) {
+        const url = `data:image/png;base64,${base64}`;
+        document.getElementById('form-image-url').value = url;
+        const preview = document.getElementById('image-preview-container');
+        preview.innerHTML = `
+          <div class="relative w-full h-full">
+            <img src="${url}" class="w-full h-24 object-cover rounded-xl shadow-inner">
+            <button type="button" onclick="clearPreviewImage()" class="absolute top-1 right-1 bg-red-600 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold">&times;</button>
+          </div>`;
+        showToast("Ilustrasi foto berhasil digenerasi!", "success");
+      }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fa-solid fa-image"></i> Generasi Ilustrasi Foto (Imagen AI)';
+    };
+
+    window.clearPreviewImage = function() {
+      document.getElementById('form-image-url').value = '';
+      document.getElementById('image-preview-container').innerHTML = `
+        <div class="text-center text-slate-400 text-xs">
+          <i class="fa-regular fa-image text-lg block mb-1"></i> Preview Foto
+        </div>`;
+    };
+
+    // Render data awal saat halaman siap
+    renderAttendanceTable();
+    renderAnalytics();
   </script>
 </body>
 </html>
